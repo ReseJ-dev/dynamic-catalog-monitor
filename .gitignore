@@ -1,0 +1,40 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Local configuration
+.env
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated output (retain placeholder files)
+reports/*
+!reports/.gitkeep
+diagnostics/*
+!diagnostics/.gitkeep
+
+# Test and coverage output
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+coverage.xml
+
+# IDE and editor metadata
+.idea/
+.vscode/
+*.swp
+.DS_Store

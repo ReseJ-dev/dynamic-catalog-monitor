@@ -1,0 +1,12 @@
+services:
+  monitor:
+    build:
+      context: .
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+      - ./diagnostics:/app/diagnostics
+    command: ["python", "-m", "app.main", "--help"]

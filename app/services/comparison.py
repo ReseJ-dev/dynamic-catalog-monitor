@@ -1,0 +1,1 @@
+"""Catalog snapshot comparison services."""

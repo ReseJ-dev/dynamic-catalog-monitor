@@ -1,0 +1,8 @@
+[
+  {
+    "external_id": "fixture-001",
+    "name": "Fixture Product",
+    "price": "19.99",
+    "url": "https://example.test/products/fixture-001"
+  }
+]
