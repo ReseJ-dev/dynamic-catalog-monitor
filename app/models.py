@@ -81,28 +81,64 @@ class PriceChange(BaseModel):
     """A price change for an existing product."""
 
     product_id: str
+    product_title: str
     old_price: Decimal = Field(ge=0)
     new_price: Decimal = Field(ge=0)
-    difference: Decimal | None = None
-    percentage_change: Decimal | None = None
+    absolute_difference: Decimal = Field(ge=0)
+    percentage_difference: Decimal | None = None
+    currency: str
+    product_url: HttpUrl
+
+    @property
+    def difference(self) -> Decimal:
+        """Return the absolute price difference using the legacy name."""
+
+        return self.absolute_difference
+
+    @property
+    def percentage_change(self) -> Decimal | None:
+        """Return the percentage difference using the legacy name."""
+
+        return self.percentage_difference
 
 
 class AvailabilityChange(BaseModel):
     """An availability change for an existing product."""
 
     product_id: str
-    old_availability: str
-    new_availability: str
+    product_title: str
+    previous_status: str
+    current_status: str
+    product_url: HttpUrl
+
+    @property
+    def old_availability(self) -> str:
+        """Return the previous status using the legacy name."""
+
+        return self.previous_status
+
+    @property
+    def new_availability(self) -> str:
+        """Return the current status using the legacy name."""
+
+        return self.current_status
 
 
 class ComparisonResult(BaseModel):
     """Products and field-level changes between two catalog snapshots."""
 
-    added_products: list[Product] = Field(default_factory=list)
+    new_products: list[Product] = Field(default_factory=list)
     removed_products: list[Product] = Field(default_factory=list)
     field_changes: list[FieldChange] = Field(default_factory=list)
     price_changes: list[PriceChange] = Field(default_factory=list)
     availability_changes: list[AvailabilityChange] = Field(default_factory=list)
+    unchanged_products: list[Product] = Field(default_factory=list)
+
+    @property
+    def added_products(self) -> list[Product]:
+        """Return newly discovered products using the previous field name."""
+
+        return self.new_products
 
 
 class RunSummary(BaseModel):
