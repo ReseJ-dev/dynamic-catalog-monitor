@@ -57,14 +57,15 @@ class RawProduct(BaseModel):
     description: str | None = None
     image_url: str | None = None
     product_url: str | None = None
-    scraped_at: datetime
+    scraped_at: datetime | None = None
 
 
 class InvalidRecord(BaseModel):
     """A raw product that could not be converted into a valid product."""
 
     raw_product: RawProduct
-    errors: list[str] = Field(default_factory=list)
+    reason: str
+    errors: list[dict[str, object]] = Field(default_factory=list)
 
 
 class FieldChange(BaseModel):
