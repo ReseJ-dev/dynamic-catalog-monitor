@@ -1,1 +1,36 @@
-"""Catalog DOM selectors."""
+"""Immutable selector groups for catalog and product-detail pages."""
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class CatalogSelectors:
+    """Selectors used to extract product cards from the catalog page."""
+
+    product_card: str = "article.product-card"
+    product_id: str = "[data-product-id]"
+    product_title: str = ".product-title"
+    product_category: str = ".product-category"
+    product_price: str = ".product-price"
+    product_currency: str = ".product-currency"
+    product_availability: str = ".product-availability"
+    product_rating: str = ".product-rating"
+    product_description: str = ".product-description"
+    product_image: str = "img.product-image"
+    product_link: str = "a.product-link"
+    load_more_button: str = "button[data-testid='load-more']"
+
+
+@dataclass(frozen=True)
+class DetailPageSelectors:
+    """Selectors used to enrich a product from its detail page."""
+
+    product_id: str = "[data-product-id]"
+    title: str = "h1.product-title"
+    category: str = ".product-category"
+    price: str = ".product-price"
+    currency: str = ".product-currency"
+    availability: str = ".product-availability"
+    rating: str = ".product-rating"
+    description: str = ".product-description"
+    image: str = "img.product-image"
