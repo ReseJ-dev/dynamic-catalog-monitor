@@ -14,3 +14,4 @@ RUN pip install --no-cache-dir . \
 RUN mkdir -p /app/data /app/reports /app/diagnostics
 
 CMD ["python", "-m", "app.main", "--help"]
+ 
