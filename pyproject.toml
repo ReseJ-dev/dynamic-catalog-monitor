@@ -56,6 +56,10 @@ files = ["app", "tests"]
 plugins = ["pydantic.mypy"]
 warn_unreachable = true
 
+[[tool.mypy.overrides]]
+module = ["openpyxl", "openpyxl.*"]
+ignore_missing_imports = true
+
 [tool.coverage.run]
 branch = true
 source = ["app"]
