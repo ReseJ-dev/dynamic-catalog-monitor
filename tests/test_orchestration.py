@@ -278,9 +278,7 @@ async def test_orchestration_completes_first_run_and_persists_unique_valid_produ
     }
     assert len(repository.saved_products) == 1
     assert (
-        events.index("create_run")
-        < events.index("browser_enter")
-        < events.index("save_products")
+        events.index("create_run") < events.index("browser_enter") < events.index("save_products")
     )
     assert events[-1] == "browser_exit"
 

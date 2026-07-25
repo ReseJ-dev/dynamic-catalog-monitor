@@ -212,14 +212,8 @@ class CatalogRunService:
                         removed_products=comparison_summary.removed_products,
                         changed_products=len(
                             {
-                                *(
-                                    change.product_id
-                                    for change in comparison.price_changes
-                                ),
-                                *(
-                                    change.product_id
-                                    for change in comparison.availability_changes
-                                ),
+                                *(change.product_id for change in comparison.price_changes),
+                                *(change.product_id for change in comparison.availability_changes),
                             }
                         ),
                     )

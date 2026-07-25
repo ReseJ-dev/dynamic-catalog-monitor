@@ -1,0 +1,54 @@
+{
+  "first": [
+    {
+      "product_id": "sku-a",
+      "title": "Alpha Product",
+      "price": "$10.00",
+      "currency": "USD",
+      "availability": "In Stock",
+      "product_url": "https://example.test/products/a"
+    },
+    {
+      "product_id": "sku-b",
+      "title": "Beta Product",
+      "price": "$20.00",
+      "currency": "USD",
+      "availability": "In Stock",
+      "product_url": "https://example.test/products/b"
+    },
+    {
+      "product_id": "sku-c",
+      "title": "Gamma Product",
+      "price": "$30.00",
+      "currency": "USD",
+      "availability": "In Stock",
+      "product_url": "https://example.test/products/c"
+    }
+  ],
+  "second": [
+    {
+      "product_id": "sku-a",
+      "title": "Alpha Product",
+      "price": "$12.00",
+      "currency": "USD",
+      "availability": "Out of Stock",
+      "product_url": "https://example.test/products/a"
+    },
+    {
+      "product_id": "sku-c",
+      "title": "Gamma Product",
+      "price": "$30.00",
+      "currency": "USD",
+      "availability": "In Stock",
+      "product_url": "https://example.test/products/c"
+    },
+    {
+      "product_id": "sku-d",
+      "title": "Delta Product",
+      "price": "$40.00",
+      "currency": "USD",
+      "availability": "In Stock",
+      "product_url": "https://example.test/products/d"
+    }
+  ]
+}
