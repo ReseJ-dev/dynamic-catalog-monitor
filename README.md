@@ -335,6 +335,14 @@ The opt-in end-to-end test uses deterministic fixture data, a temporary SQLite
 database, and a temporary report directory. Tests that launch a real Chromium
 browser should be marked `@pytest.mark.integration`.
 
+### Continuous integration
+
+GitHub Actions runs on pushes to `main` and pull requests targeting `main`. It
+uses Python 3.12, caches pip dependencies, runs Ruff, MyPy, and the default
+non-integration test suite, enforces 85% application coverage, and uploads
+`coverage.xml` as a workflow artifact. Browser and live-site integration tests
+are intentionally not part of this default CI workflow.
+
 ## Docker usage
 
 Build the image and display CLI help:
