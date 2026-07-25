@@ -97,6 +97,7 @@ class CatalogScraper:
         await self.navigate_to_catalog()
         cards = self._page.locator(self._catalog_selectors.product_card)
         initial_count = await self._wait_for_initial_cards(cards)
+        self._logger.info("Initial products found: %d", initial_count)
         click_count = 0
 
         while True:
@@ -139,6 +140,11 @@ class CatalogScraper:
                     click_count,
                     CatalogStopReason.CARD_COUNT_DID_NOT_GROW,
                 )
+            self._logger.info(
+                "Load More click %d: products increased to %d",
+                click_count,
+                final_count,
+            )
 
     async def collect_products(self) -> list[RawProduct]:
         """Load the catalog and return sequentially enriched raw product records."""
