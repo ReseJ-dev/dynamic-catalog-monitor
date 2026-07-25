@@ -34,3 +34,5 @@ class DetailPageSelectors:
     rating: str = ".product-rating"
     description: str = ".product-description"
     image: str = "img.product-image"
+    canonical_product_id: str = "[data-product-id]"
+    canonical_product_url: str = "link[rel='canonical']"

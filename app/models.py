@@ -58,6 +58,7 @@ class RawProduct(BaseModel):
     image_url: str | None = None
     product_url: str | None = None
     scraped_at: datetime | None = None
+    extraction_warnings: list[str] = Field(default_factory=list)
 
 
 class InvalidRecord(BaseModel):
