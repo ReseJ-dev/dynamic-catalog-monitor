@@ -2,6 +2,7 @@
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import Field, HttpUrl, PositiveInt
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -26,6 +27,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     diagnostics_dir: Path = Path("diagnostics")
     max_items: PositiveInt | None = Field(default=None)
+    scraper_profile: Literal["default", "scraping_sandbox"] = "default"
 
 
 @lru_cache

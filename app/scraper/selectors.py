@@ -36,3 +36,21 @@ class DetailPageSelectors:
     image: str = "img.product-image"
     canonical_product_id: str = "[data-product-id]"
     canonical_product_url: str = "link[rel='canonical']"
+
+
+def scraping_sandbox_catalog_selectors() -> CatalogSelectors:
+    """Return selectors for the public Scraping Sandbox practice catalog."""
+
+    return CatalogSelectors(
+        product_card="a.product-card",
+        product_id=".sku",
+        product_title=".product-name",
+        product_category=".category",
+        product_price=".price",
+        product_currency=".currency-not-present",
+        product_availability=".availability",
+        product_rating=".rating",
+        product_image="img.product-image",
+        product_link="a.product-link-not-present",
+        load_more_button="button[data-testid='load-more-not-present']",
+    )

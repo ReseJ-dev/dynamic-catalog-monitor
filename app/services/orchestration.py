@@ -16,7 +16,12 @@ from app.db.models import ScrapeRun
 from app.models import ComparisonResult, Product, RawProduct, RunSummary
 from app.scraper.browser import BrowserManager
 from app.scraper.catalog import CatalogScraper
-from app.scraper.selectors import CatalogSelectors, DetailPageSelectors
+from app.scraper.scraping_sandbox import ScrapingSandboxScraper
+from app.scraper.selectors import (
+    CatalogSelectors,
+    DetailPageSelectors,
+    scraping_sandbox_catalog_selectors,
+)
 from app.services.comparison import compare_snapshots
 from app.services.deduplication import deduplicate_products
 from app.services.reporting import generate_catalog_report
@@ -347,6 +352,14 @@ class CatalogRunService:
     ) -> CatalogScraper:
         """Create the standard dynamic catalog scraper."""
 
+        if settings.scraper_profile == "scraping_sandbox":
+            return ScrapingSandboxScraper(
+                page,
+                scraping_sandbox_catalog_selectors(),
+                DetailPageSelectors(),
+                settings,
+                logger,
+            )
         return CatalogScraper(
             page,
             CatalogSelectors(),

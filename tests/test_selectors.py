@@ -4,7 +4,11 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from app.scraper.selectors import CatalogSelectors, DetailPageSelectors
+from app.scraper.selectors import (
+    CatalogSelectors,
+    DetailPageSelectors,
+    scraping_sandbox_catalog_selectors,
+)
 
 
 def test_catalog_selectors_have_expected_defaults() -> None:
@@ -26,3 +30,14 @@ def test_selector_groups_are_immutable() -> None:
 
     with pytest.raises(FrozenInstanceError):
         selectors.title = ".replacement-title"  # type: ignore[misc]
+
+
+def test_scraping_sandbox_selectors_match_its_product_card_markup() -> None:
+    """The public practice catalog profile targets stable semantic CSS classes."""
+
+    selectors = scraping_sandbox_catalog_selectors()
+
+    assert selectors.product_card == "a.product-card"
+    assert selectors.product_id == ".sku"
+    assert selectors.product_title == ".product-name"
+    assert selectors.product_link == "a.product-link-not-present"

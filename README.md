@@ -242,9 +242,10 @@ LOG_LEVEL=INFO
 ```
 
 Additional supported settings are `DIAGNOSTICS_DIR` (defaults to `diagnostics`)
-and `MAX_ITEMS` (optional positive limit). `OUTPUT_DIR` and `DIAGNOSTICS_DIR`
-are filesystem paths; the SQLite URL is suitable for local development and MVP
-deployments.
+and `MAX_ITEMS` (optional positive limit). `SCRAPER_PROFILE` is `default` for
+the included demo or `scraping_sandbox` for the supported public practice
+catalog. `OUTPUT_DIR` and `DIAGNOSTICS_DIR` are filesystem paths; the SQLite
+URL is suitable for local development and MVP deployments.
 
 ### Local demonstration catalog
 
@@ -271,6 +272,30 @@ The generated workbook will contain three valid products and one row on
 **Invalid Records**. The committed report screenshots below were produced from
 two local runs; the second temporarily changed the Orbit Desk Lamp price and
 availability to demonstrate comparison output.
+
+### Scraping Sandbox profile
+
+The application also supports [Scraping Sandbox](https://scrapingsandbox.com/),
+a public practice catalog that explicitly permits browser-automation practice.
+It uses product-card selectors and numbered pagination rather than the local
+demo's Load More button. Configure a cautious first run as follows:
+
+```dotenv
+CATALOG_URL=https://scrapingsandbox.com/
+SCRAPER_PROFILE=scraping_sandbox
+MAX_ITEMS=30
+```
+
+Then run:
+
+```bash
+python -m app.main scrape
+```
+
+The profile follows Sandbox's next-page control until `MAX_ITEMS` or
+`MAX_LOAD_MORE_CLICKS` is reached. Start with a small `MAX_ITEMS` value and
+increase it only when needed. It collects the product-card fields; the Sandbox
+detail-page markup is intentionally not treated as a universal selector target.
 
 ## CLI commands
 

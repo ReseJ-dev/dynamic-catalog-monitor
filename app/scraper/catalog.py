@@ -252,7 +252,8 @@ class CatalogScraper:
                 str(self._settings.catalog_url),
             ),
             product_url=resolve_url(
-                await safe_attribute(card.locator(self._catalog_selectors.product_link), "href"),
+                await safe_attribute(card.locator(self._catalog_selectors.product_link), "href")
+                or await safe_attribute(card, "href"),
                 str(self._settings.catalog_url),
             ),
             scraped_at=scraped_at,
