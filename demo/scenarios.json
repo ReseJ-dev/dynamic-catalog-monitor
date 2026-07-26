@@ -1,0 +1,14 @@
+{
+  "first": [
+    {"id": "product-101", "title": "Orbit Desk Lamp", "category": "Lighting", "price": "$49.99", "currency": "USD", "availability": " In Stock ", "rating": "4.6 out of 5", "image": "placeholder.svg", "detail_url": "product-101.html"},
+    {"id": "product-102", "title": "Harbor Notebook", "category": "Stationery", "price": "€ 1.299,99", "currency": "EUR", "availability": "OUT OF STOCK", "rating": "Rated 4.2 / 5", "image": "placeholder.svg", "detail_url": "product-102.html"},
+    {"id": "product-103", "title": "Field Mug", "category": "Kitchen", "price": "£18.50", "currency": "GBP", "availability": "Limited availability", "rating": "5", "image": "placeholder.svg", "detail_url": "product-103.html"},
+    {"id": "product-invalid", "title": "Broken Price Example", "category": "Examples", "price": "price on request", "currency": "USD", "availability": "In Stock", "rating": "3.8 stars", "image": "placeholder.svg", "detail_url": "missing-product.html"}
+  ],
+  "second": [
+    {"id": "product-101", "title": "Orbit Desk Lamp", "category": "Lighting", "price": "$39.99", "currency": "USD", "availability": "OUT OF STOCK", "rating": "4.6 out of 5", "image": "placeholder.svg", "detail_url": "product-101-second.html"},
+    {"id": "product-103", "title": "Field Mug", "category": "Kitchen", "price": "£18.50", "currency": "GBP", "availability": "Limited availability", "rating": "5", "image": "placeholder.svg", "detail_url": "product-103.html"},
+    {"id": "product-104", "title": "Aurora Bottle", "category": "Outdoor", "price": "$27.50", "currency": "USD", "availability": "In Stock", "rating": "4.8 stars", "image": "placeholder.svg", "detail_url": "product-104.html"},
+    {"id": "product-invalid", "title": "Broken Price Example", "category": "Examples", "price": "price on request", "currency": "USD", "availability": "In Stock", "rating": "3.8 stars", "image": "placeholder.svg", "detail_url": "missing-product.html"}
+  ]
+}

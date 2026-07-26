@@ -26,6 +26,7 @@ def test_settings_read_environment_file(tmp_path: Path) -> None:
                 "DIAGNOSTICS_DIR=debug-artifacts",
                 "MAX_ITEMS=125",
                 "SCRAPER_PROFILE=scraping_sandbox",
+                "DEMO_SCENARIO=second",
             ]
         ),
         encoding="utf-8",
@@ -41,6 +42,7 @@ def test_settings_read_environment_file(tmp_path: Path) -> None:
     assert settings.diagnostics_dir == Path("debug-artifacts")
     assert settings.max_items == 125
     assert settings.scraper_profile == "scraping_sandbox"
+    assert settings.demo_scenario == "second"
 
 
 @pytest.mark.parametrize(

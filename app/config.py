@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     diagnostics_dir: Path = Path("diagnostics")
     max_items: PositiveInt | None = Field(default=None)
     scraper_profile: Literal["default", "scraping_sandbox"] = "default"
+    demo_scenario: Literal["first", "second"] | None = None
 
 
 @lru_cache

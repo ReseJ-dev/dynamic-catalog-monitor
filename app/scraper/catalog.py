@@ -4,7 +4,7 @@ import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
-from urllib.parse import urljoin
+from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 from playwright.async_api import Error as PlaywrightError
 from playwright.async_api import Locator, Page
@@ -70,6 +70,17 @@ def resolve_url(raw_url: str | None, base_url: str) -> str | None:
     if raw_url is None:
         return None
     return urljoin(base_url, raw_url)
+
+
+def catalog_url_with_demo_scenario(catalog_url: str, scenario: str | None) -> str:
+    """Add an optional local demo scenario while retaining existing query parameters."""
+
+    if scenario is None:
+        return catalog_url
+    parsed = urlsplit(catalog_url)
+    query = dict(parse_qsl(parsed.query, keep_blank_values=True))
+    query["scenario"] = scenario
+    return urlunsplit(parsed._replace(query=urlencode(query)))
 
 
 class CatalogScraper:
@@ -275,9 +286,12 @@ class CatalogScraper:
     async def navigate_to_catalog(self) -> None:
         """Navigate to the configured catalog URL and wait for DOM readiness."""
 
-        self._logger.info("Navigating to catalog: %s", self._settings.catalog_url)
+        catalog_url = catalog_url_with_demo_scenario(
+            str(self._settings.catalog_url), self._settings.demo_scenario
+        )
+        self._logger.info("Navigating to catalog: %s", catalog_url)
         await self._page.goto(
-            str(self._settings.catalog_url),
+            catalog_url,
             wait_until="domcontentloaded",
             timeout=self._settings.page_timeout_ms,
         )

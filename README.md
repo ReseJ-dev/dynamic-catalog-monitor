@@ -239,6 +239,8 @@ OUTPUT_DIR=reports
 DATABASE_URL=sqlite+aiosqlite:///data/catalog.db
 SAVE_FAILURE_SCREENSHOTS=true
 LOG_LEVEL=INFO
+SCRAPER_PROFILE=default
+DEMO_SCENARIO=first
 ```
 
 Additional supported settings are `DIAGNOSTICS_DIR` (defaults to `diagnostics`)
@@ -269,9 +271,20 @@ python -m app.main scrape
 ```
 
 The generated workbook will contain three valid products and one row on
-**Invalid Records**. The committed report screenshots below were produced from
-two local runs; the second temporarily changed the Orbit Desk Lamp price and
-availability to demonstrate comparison output.
+**Invalid Records**. Two deterministic scenarios demonstrate snapshot
+comparison without relying on external price changes. Keep the local server
+running, then use a dedicated demo database for each pair of runs:
+
+```bash
+# .env: CATALOG_URL=http://localhost:8000/catalog.html
+# .env: SCRAPER_PROFILE=default
+DEMO_SCENARIO=first DATABASE_URL=sqlite+aiosqlite:///data/demo.db python -m app.main scrape
+DEMO_SCENARIO=second DATABASE_URL=sqlite+aiosqlite:///data/demo.db python -m app.main scrape
+```
+
+The second run reliably reports one new product, one removed product, one price
+decrease, and one availability change. The committed report screenshots below
+were generated from these local scenarios.
 
 ### Scraping Sandbox profile
 

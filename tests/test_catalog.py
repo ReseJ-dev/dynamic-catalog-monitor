@@ -10,7 +10,12 @@ from playwright.async_api import Page
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
 from app.config import Settings
-from app.scraper.catalog import CatalogLoadError, CatalogScraper, CatalogStopReason
+from app.scraper.catalog import (
+    CatalogLoadError,
+    CatalogScraper,
+    CatalogStopReason,
+    catalog_url_with_demo_scenario,
+)
 from app.scraper.selectors import CatalogSelectors, DetailPageSelectors
 
 
@@ -226,3 +231,20 @@ async def test_catalog_loading_stops_on_card_growth_timeout() -> None:
     assert result.stop_reason == CatalogStopReason.CARD_GROWTH_TIMEOUT
     assert result.final_card_count == 1
     assert result.load_more_click_count == 1
+
+
+def test_catalog_url_adds_or_replaces_a_demo_scenario() -> None:
+    """The selected local scenario is passed to the browser without losing query data."""
+
+    assert (
+        catalog_url_with_demo_scenario("http://localhost:8000/catalog.html", "second")
+        == "http://localhost:8000/catalog.html?scenario=second"
+    )
+    assert (
+        catalog_url_with_demo_scenario("https://example.test/catalog?source=demo", "first")
+        == "https://example.test/catalog?source=demo&scenario=first"
+    )
+    assert (
+        catalog_url_with_demo_scenario("https://example.test/catalog", None)
+        == "https://example.test/catalog"
+    )
