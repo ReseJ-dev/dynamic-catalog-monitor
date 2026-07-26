@@ -221,8 +221,8 @@ python -m playwright install --with-deps chromium
 
 ## Environment configuration
 
-Copy the example file and replace the catalog URL with a site you are authorized
-to monitor:
+Copy the example file. It targets the included local demo; replace the catalog
+URL only with a site you are authorized to monitor:
 
 ```bash
 cp .env.example .env
@@ -231,7 +231,7 @@ cp .env.example .env
 `.env.example`:
 
 ```dotenv
-CATALOG_URL=https://example.test/catalog
+CATALOG_URL=http://localhost:8000/catalog.html
 HEADLESS=true
 MAX_LOAD_MORE_CLICKS=20
 PAGE_TIMEOUT_MS=30000
@@ -245,6 +245,32 @@ Additional supported settings are `DIAGNOSTICS_DIR` (defaults to `diagnostics`)
 and `MAX_ITEMS` (optional positive limit). `OUTPUT_DIR` and `DIAGNOSTICS_DIR`
 are filesystem paths; the SQLite URL is suitable for local development and MVP
 deployments.
+
+### Local demonstration catalog
+
+The `demo/` directory is a safe, locally authored catalog—no commercial site or
+product imagery is used. It starts with JavaScript-delayed cards, supports a
+delayed **Load more** action, links to local detail pages, includes an
+out-of-stock product, several price/rating formats, and one intentionally
+invalid price for validation-report demonstrations.
+
+Serve it in one terminal:
+
+```bash
+python -m http.server 8000 --directory demo
+```
+
+Then, in another terminal, use the example configuration and run the monitor:
+
+```bash
+cp .env.example .env
+python -m app.main scrape
+```
+
+The generated workbook will contain three valid products and one row on
+**Invalid Records**. The committed report screenshots below were produced from
+two local runs; the second temporarily changed the Orbit Desk Lamp price and
+availability to demonstrate comparison output.
 
 ## CLI commands
 
@@ -386,13 +412,15 @@ JSON diagnostics remain useful for investigation.
 
 ## Screenshots
 
-These are intentionally placeholder paths, not generated screenshots. Replace
-them with real artifacts after running the application and capturing suitable
-examples.
+These are genuine artifacts generated from the local demonstration catalog. The
+report previews render the values from the generated workbook; the diagnostic
+image is the screenshot saved by the monitor during an intentional local
+missing-page failure.
 
 ![CLI run](docs/images/cli-run.png)
 ![Excel summary](docs/images/excel-summary.png)
 ![Price changes](docs/images/price-changes.png)
+![Failure diagnostics](docs/images/diagnostics-failure.png)
 
 ## Limitations
 

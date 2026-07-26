@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dynamic Catalog Monitor Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <p class="eyebrow">Local demonstration catalog</p>
+        <h1>Studio Supply Co.</h1>
+        <p>Products are rendered locally with JavaScript for monitor demonstrations.</p>
+      </header>
+      <p id="catalog-status" role="status">Preparing products…</p>
+      <section id="catalog" class="catalog" aria-live="polite"></section>
+      <button data-testid="load-more" id="load-more" type="button" hidden>
+        Load more products
+      </button>
+    </main>
+  </body>
+</html>

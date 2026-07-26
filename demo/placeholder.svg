@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280" viewBox="0 0 400 280" role="img" aria-label="Local product placeholder">
+  <rect width="400" height="280" fill="#2f6690"/>
+  <circle cx="200" cy="118" r="54" fill="#d9e2ec" opacity=".9"/>
+  <path d="M118 226c20-43 51-64 82-64s62 21 82 64" fill="#d9e2ec" opacity=".9"/>
+  <text x="200" y="258" text-anchor="middle" fill="white" font-family="sans-serif" font-size="18">Local demo placeholder</text>
+</svg>
