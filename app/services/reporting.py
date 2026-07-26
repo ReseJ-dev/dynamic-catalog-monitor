@@ -11,7 +11,7 @@ from urllib.parse import urlsplit
 
 from openpyxl import Workbook
 from openpyxl.cell.cell import Cell
-from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 
@@ -25,6 +25,28 @@ HEADER_FILL = PatternFill(fill_type="solid", fgColor="1F4E78")
 HEADER_FONT = Font(bold=True, color="FFFFFF")
 HEADER_ALIGNMENT = Alignment(horizontal="center", vertical="center", wrap_text=True)
 CELL_ALIGNMENT = Alignment(vertical="top", wrap_text=True)
+ZEBRA_FILL = PatternFill(fill_type="solid", fgColor="F5F9FC")
+SUMMARY_LABEL_FILL = PatternFill(fill_type="solid", fgColor="D9EAF7")
+SUCCESS_FILL = PatternFill(fill_type="solid", fgColor="D9EAD3")
+WARNING_FILL = PatternFill(fill_type="solid", fgColor="FFF2CC")
+ALERT_FILL = PatternFill(fill_type="solid", fgColor="FCE4D6")
+PRICE_DECREASE_FILL = PatternFill(fill_type="solid", fgColor="D9EAD3")
+PRICE_INCREASE_FILL = PatternFill(fill_type="solid", fgColor="F4CCCC")
+THIN_BORDER = Border(
+    left=Side(style="thin", color="D9E2EC"),
+    right=Side(style="thin", color="D9E2EC"),
+    top=Side(style="thin", color="D9E2EC"),
+    bottom=Side(style="thin", color="D9E2EC"),
+)
+SHEET_TAB_COLORS = {
+    "All Products": "1F4E78",
+    "New Products": "548235",
+    "Price Changes": "C55A11",
+    "Availability Changes": "7030A0",
+    "Removed Products": "C00000",
+    "Invalid Records": "BF9000",
+    "Run Summary": "0F6B78",
+}
 PRODUCT_HEADERS = [
     "Product ID",
     "Title",
@@ -135,6 +157,7 @@ def _write_price_changes_sheet(workbook: Workbook, result: ComparisonResult) -> 
             percentage_columns=(5,),
             hyperlink_columns={7: str(change.product_url)},
         )
+        _highlight_price_change(worksheet, worksheet.max_row, change.percentage_difference)
     _finalize_worksheet(worksheet)
 
 
@@ -154,6 +177,7 @@ def _write_availability_changes_sheet(workbook: Workbook, result: ComparisonResu
             str(change.product_url),
         ]
         _append_row(worksheet, row, hyperlink_columns={4: str(change.product_url)})
+        _highlight_availability_change(worksheet, worksheet.max_row, change.current_status)
     _finalize_worksheet(worksheet)
 
 
@@ -258,6 +282,7 @@ def _write_run_summary_sheet(
     worksheet["B2"].number_format = DATE_FORMAT
     worksheet["B3"].number_format = TIMESTAMP_FORMAT
     worksheet["B4"].number_format = TIMESTAMP_FORMAT
+    _style_run_summary(worksheet)
     _finalize_worksheet(worksheet)
 
 
@@ -265,11 +290,15 @@ def _create_worksheet(workbook: Workbook, title: str, headers: list[str]) -> Wor
     """Create one consistently formatted worksheet with a header row."""
 
     worksheet = workbook.create_sheet(title)
+    worksheet.sheet_properties.tabColor = SHEET_TAB_COLORS[title]
+    worksheet.sheet_view.showGridLines = False
     worksheet.append(headers)
     for cell in worksheet[1]:
         cell.font = HEADER_FONT
         cell.fill = HEADER_FILL
         cell.alignment = HEADER_ALIGNMENT
+        cell.border = THIN_BORDER
+    worksheet.row_dimensions[1].height = 28
     worksheet.freeze_panes = "A2"
     worksheet.auto_filter.ref = f"A1:{get_column_letter(len(headers))}1"
     return worksheet
@@ -290,6 +319,7 @@ def _append_row(
     row_index = worksheet.max_row
     for cell in worksheet[row_index]:
         cell.alignment = CELL_ALIGNMENT
+        cell.border = THIN_BORDER
     for column in currency_columns:
         worksheet.cell(row_index, column).number_format = CURRENCY_FORMAT
     for column in percentage_columns:
@@ -311,7 +341,7 @@ def _set_hyperlink(cell: Cell, url: str | None) -> None:
 
 
 def _finalize_worksheet(worksheet: Worksheet) -> None:
-    """Set sensible widths and wrapped text without repeating sheet-specific styling."""
+    """Apply readable widths, borders, and alternating rows across a worksheet."""
 
     for column_cells in worksheet.columns:
         column_letter = get_column_letter(column_cells[0].column)
@@ -319,6 +349,55 @@ def _finalize_worksheet(worksheet: Worksheet) -> None:
         worksheet.column_dimensions[column_letter].width = min(max(longest_value + 2, 12), 50)
         for cell in column_cells[1:]:
             cell.alignment = CELL_ALIGNMENT
+            if cell.row % 2 == 0 and cell.fill.fill_type is None:
+                cell.fill = ZEBRA_FILL
+
+
+def _highlight_price_change(
+    worksheet: Worksheet,
+    row_index: int,
+    percentage_difference: Decimal | None,
+) -> None:
+    """Color price-change rows green for decreases and red for increases."""
+
+    fill = (
+        PRICE_DECREASE_FILL
+        if percentage_difference is not None and percentage_difference < 0
+        else PRICE_INCREASE_FILL
+    )
+    for cell in worksheet[row_index]:
+        cell.fill = fill
+        cell.font = Font(bold=cell.column in (1, 5))
+
+
+def _highlight_availability_change(
+    worksheet: Worksheet,
+    row_index: int,
+    current_status: str,
+) -> None:
+    """Use green for available products and amber for constrained availability."""
+
+    fill = SUCCESS_FILL if current_status == "in_stock" else WARNING_FILL
+    for cell in worksheet[row_index]:
+        cell.fill = fill
+        cell.font = Font(bold=cell.column in (1, 3))
+
+
+def _style_run_summary(worksheet: Worksheet) -> None:
+    """Style the summary as a compact, skimmable run dashboard."""
+
+    status_cell = worksheet["B14"]
+    status_cell.fill = SUCCESS_FILL if status_cell.value == "completed" else ALERT_FILL
+    status_cell.font = Font(bold=True, color="1F1F1F")
+    for row_index in range(2, worksheet.max_row + 1):
+        label_cell = worksheet.cell(row_index, 1)
+        value_cell = worksheet.cell(row_index, 2)
+        label_cell.fill = SUMMARY_LABEL_FILL
+        label_cell.font = Font(bold=True, color="1F1F1F")
+        if row_index in (6, 7, 8, 9, 10, 11, 12, 13):
+            value_cell.font = Font(bold=True, size=12, color="1F1F1F")
+        if row_index in (8, 10, 11):
+            value_cell.fill = ALERT_FILL if value_cell.value else SUCCESS_FILL
 
 
 def _report_path(reports_dir: Path, started_at: datetime) -> Path:

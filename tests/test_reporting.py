@@ -18,7 +18,11 @@ from app.models import (
 from app.services.reporting import (
     CURRENCY_FORMAT,
     PERCENTAGE_FORMAT,
+    PRICE_INCREASE_FILL,
     PRODUCT_HEADERS,
+    SHEET_TAB_COLORS,
+    SUCCESS_FILL,
+    ZEBRA_FILL,
     generate_catalog_report,
 )
 
@@ -122,7 +126,10 @@ def test_generate_catalog_report_creates_formatted_workbook(tmp_path: Path) -> N
         assert worksheet.auto_filter.ref is not None
 
     all_products = workbook["All Products"]
+    assert all_products.sheet_properties.tabColor.rgb == f"00{SHEET_TAB_COLORS['All Products']}"
+    assert all_products.sheet_view.showGridLines is False
     assert all_products["D2"].number_format == CURRENCY_FORMAT
+    assert all_products["A2"].fill.fgColor.rgb == f"00{ZEBRA_FILL.fgColor.rgb[-6:]}"
     assert all_products["J2"].hyperlink is not None
     assert all_products["J2"].hyperlink.target == "https://example.test/products/fixture"
     assert all_products["J2"].value == "example.test/products/fixture"
@@ -131,6 +138,7 @@ def test_generate_catalog_report_creates_formatted_workbook(tmp_path: Path) -> N
     assert price_changes["B2"].number_format == CURRENCY_FORMAT
     assert price_changes["E2"].number_format == PERCENTAGE_FORMAT
     assert price_changes["G2"].hyperlink is not None
+    assert price_changes["A2"].fill.fgColor.rgb == f"00{PRICE_INCREASE_FILL.fgColor.rgb[-6:]}"
 
     summary_values = {
         row[0].value: row[1].value
@@ -145,6 +153,7 @@ def test_generate_catalog_report_creates_formatted_workbook(tmp_path: Path) -> N
     assert summary_values["Availability changes"] == 1
     assert summary_values["Unchanged products"] == 1
     assert summary_values["Run status"] == "completed"
+    assert workbook["Run Summary"]["B14"].fill.fgColor.rgb == f"00{SUCCESS_FILL.fgColor.rgb[-6:]}"
 
 
 def test_generate_catalog_report_handles_empty_data_and_avoids_overwriting(tmp_path: Path) -> None:
